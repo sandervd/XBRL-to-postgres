@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  arelle:
+    build: Arelle
+    volumes:
+      - ./arelle-workdir:/root/.config/arelle
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=arelle
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: test
+    ports:
+      - 8001:80
+    depends_on:
+      - postgres
