@@ -1,23 +1,33 @@
 version: '3.3'
 services:
+  arelle-base:
+    image: arelle-base
+    build:
+      context: docker/Arelle
+    command: '/bin/true'
   arelle:
-    build: Arelle
+    image: arelle
+    build:
+      context: docker/Arelle-custom
     volumes:
       - ./arelle-workdir:/root/.config/arelle
+      - ./filings:/usr/src/app/filings
     ports:
       - "8080:8080"
 
   postgres:
-    image: postgres:latest
+    build:
+      context: docker/postgres
     environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=arelle
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=arelle_pwd
+      - POSTGRES_DB=arelle_db
 
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
-      PGADMIN_DEFAULT_EMAIL: test@test.com
-      PGADMIN_DEFAULT_PASSWORD: test
+      PGADMIN_DEFAULT_EMAIL: arelle@xbrl.org
+      PGADMIN_DEFAULT_PASSWORD: arelle_pwd
     ports:
       - 8001:80
     depends_on:
